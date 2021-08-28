@@ -9,6 +9,9 @@ import UIKit
 
 class ViewController: UIViewController {
   @IBOutlet weak var tableView: UITableView!
+
+  var tasks = [Task]()
+
   override func viewDidLoad() {
     super.viewDidLoad()
   }
@@ -18,8 +21,10 @@ class ViewController: UIViewController {
   
   @IBAction func tapAddButton(_ sender: UIBarButtonItem) {
     let alert = UIAlertController(title: "할 일 등록", message: nil, preferredStyle: .alert)
-    let registerButton = UIAlertAction(title: "등록", style: .default, handler: { _ in
-      debugPrint("\(alert.textFields?[0].text)")
+    let registerButton = UIAlertAction(title: "등록", style: .default, handler: { [weak self] _ in
+      guard let title = alert.textFields?[0].text else { return }
+      let task = Task(title: title, done: false)
+      self?.tasks.append(task)
     })
     let cancelButton = UIAlertAction(title: "취소", style: .cancel, handler: nil)
     alert.addTextField(configurationHandler: { textField in
