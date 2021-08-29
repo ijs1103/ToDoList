@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     self.loadTasks()
     self.tableView.dataSource = self
+    self.tableView.delegate = self
   }
 
   @IBAction func tapEditButton(_ sender: UIBarButtonItem) {
@@ -73,7 +74,21 @@ extension ViewController: UITableViewDataSource {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
     let task = self.tasks[indexPath.row]
     cell.textLabel?.text = task.title
+    if task.done {
+      cell.accessoryType = .checkmark
+    } else {
+      cell.accessoryType = .none
+    }
     return cell
+  }
+}
+
+extension ViewController: UITableViewDelegate {
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    var task = self.tasks[indexPath.row]
+    task.done = !task.done
+    self.tasks[indexPath.row] = task
+    self.tableView.reloadRows(at: [indexPath], with: .automatic)
   }
 }
 
