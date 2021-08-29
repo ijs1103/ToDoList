@@ -9,7 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
   @IBOutlet weak var tableView: UITableView!
-
+  @IBOutlet var editButton: UIBarButtonItem!
+  var doneButton: UIBarButtonItem?
   var tasks = [Task]() {
     didSet {
       self.saveTasks()
@@ -21,9 +22,18 @@ class ViewController: UIViewController {
     self.loadTasks()
     self.tableView.dataSource = self
     self.tableView.delegate = self
+    self.doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTap))
   }
 
   @IBAction func tapEditButton(_ sender: UIBarButtonItem) {
+    guard !self.tasks.isEmpty else { return }
+    self.navigationItem.leftBarButtonItem = self.doneButton
+    self.tableView.setEditing(true, animated: true)
+  }
+
+  @objc func doneButtonTap() {
+    self.navigationItem.leftBarButtonItem = self.editButton
+    self.tableView.setEditing(false, animated: true)
   }
   
   @IBAction func tapAddButton(_ sender: UIBarButtonItem) {
