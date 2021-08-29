@@ -10,10 +10,15 @@ import UIKit
 class ViewController: UIViewController {
   @IBOutlet weak var tableView: UITableView!
 
-  var tasks = [Task]()
+  var tasks = [Task]() {
+    didSet {
+      self.saveTasks()
+    }
+  }
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.loadTasks()
     self.tableView.dataSource = self
   }
 
@@ -35,6 +40,27 @@ class ViewController: UIViewController {
     alert.addAction(cancelButton)
     alert.addAction(registerButton)
     self.present(alert, animated: true, completion: nil)
+  }
+
+  func saveTasks() {
+    let data = self.tasks.map {
+      [
+        "title": $0.title,
+        "done": $0.done
+      ]
+    }
+    let userDefaults = UserDefaults.standard
+    userDefaults.set(data, forKey: "tasks")
+  }
+
+  func loadTasks() {
+    let userDefaults = UserDefaults.standard
+    guard let data = userDefaults.object(forKey: "tasks") as? [[String: Any]] else { return }
+    self.tasks = data.compactMap {
+      guard let title = $0["title"] as? String else { return nil }
+      guard let done = $0["done"] as? Bool else { return nil }
+      return Task(title: title, done: done)
+    }
   }
 }
 
