@@ -91,6 +91,15 @@ extension ViewController: UITableViewDataSource {
     }
     return cell
   }
+
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    self.tasks.remove(at: indexPath.row)
+    tableView.deleteRows(at: [indexPath], with: .automatic)
+
+    if self.tasks.isEmpty {
+      self.doneButtonTap()
+    }
+  }
 }
 
 extension ViewController: UITableViewDelegate {
