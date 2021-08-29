@@ -92,6 +92,18 @@ extension ViewController: UITableViewDataSource {
     return cell
   }
 
+  func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+    return true
+  }
+
+  func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    var tasks = self.tasks
+    let task = tasks[sourceIndexPath.row]
+    tasks.remove(at: sourceIndexPath.row)
+    tasks.insert(task, at: destinationIndexPath.row)
+    self.tasks = tasks
+  }
+
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
     self.tasks.remove(at: indexPath.row)
     tableView.deleteRows(at: [indexPath], with: .automatic)
